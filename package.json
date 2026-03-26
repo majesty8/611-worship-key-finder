@@ -1,4 +1,7 @@
 {
-  "name": "worship-key-finder",
-  "version": "1.0.0"
+  "name": "611-worship-key-finder",
+  "version": "1.0.0",
+  "scripts": {
+    "vercel-build": "pip install -r requirements.txt"
+  }
 }
