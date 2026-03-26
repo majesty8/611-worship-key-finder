@@ -1,6 +1,0 @@
-flask==2.3.3
-flask-cors==4.0.0
-librosa==0.10.1
-numpy==1.24.3
-yt-dlp==2023.10.13
-gunicorn==21.2.0
