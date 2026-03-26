@@ -9,5 +9,6 @@
       "source": "/(.*)",
       "destination": "/api/index.py"
     }
-  ]
+  ],
+  "buildCommand": "npm run vercel-build"
 }
