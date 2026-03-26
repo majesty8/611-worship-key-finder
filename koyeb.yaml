@@ -1,0 +1,9 @@
+name: worship-key-finder
+service:
+  - name: web
+    git:
+      repository: majesty8/worship-key-finder
+      branch: main
+    build_command: pip install -r requirements.txt
+    run_command: gunicorn app:app
+    port: 5000
