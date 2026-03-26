@@ -34,7 +34,7 @@ def get_youtube_title(video_id):
             info = ydl.extract_info(f"https://www.youtube.com/watch?v={video_id}", download=False)
             return info.get('title', '')
     except Exception as e:
-        print(f"Error getting title: {e}")
+        print(f"Error: {e}")
         return None
 
 # Worship song database
@@ -42,10 +42,8 @@ WORSHIP_DB = {
     'way maker': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
     'what a beautiful name': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
     '10,000 reasons': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
-    'ten thousand reasons': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
     'good good father': {'key': 'C major', 'chords': ['C', 'G', 'Am', 'F']},
     'oceans': {'key': 'D major', 'chords': ['D', 'A', 'Bm', 'G']},
-    'oceans where feet may fail': {'key': 'D major', 'chords': ['D', 'A', 'Bm', 'G']},
     'reckless love': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
     'who you say i am': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
     'build my life': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
@@ -54,20 +52,15 @@ WORSHIP_DB = {
     'in christ alone': {'key': 'D major', 'chords': ['D', 'A', 'Bm', 'G']},
     'amazing grace': {'key': 'G major', 'chords': ['G', 'C', 'G', 'D']},
     'how great is our god': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
-    'here i am to worship': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
-    'blessed be your name': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
-    'shout to the lord': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
 }
 
 COMMON_KEYS = [
     {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
-    {'key': 'C major', 'chords': ['C', 'G', 'Am', 'F']},
-    {'key': 'D major', 'chords': ['D', 'A', 'Bm', 'G']},
 ]
 
 def find_song_key(song_title):
     if not song_title:
-        return None
+        return COMMON_KEYS[0]
     
     song_lower = song_title.lower()
     
@@ -104,9 +97,7 @@ def get_roman_numerals(chords, key):
 def index():
     return jsonify({
         'message': 'Worship Key Finder API is running!',
-        'endpoints': {
-            'analyze': 'POST /api/analyze with { "url": "youtube_url" }'
-        }
+        'status': 'ready'
     })
 
 @app.route('/api/analyze', methods=['POST'])
@@ -146,6 +137,5 @@ def analyze():
         print(f"Error: {e}")
         return jsonify({'error': str(e)}), 500
 
-# For local testing
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
