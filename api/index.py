@@ -1,9 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import requests
 import re
 import yt_dlp
-import os
 
 app = Flask(__name__)
 CORS(app)
@@ -36,6 +34,7 @@ def get_youtube_title(video_id):
             info = ydl.extract_info(f"https://www.youtube.com/watch?v={video_id}", download=False)
             return info.get('title', '')
     except Exception as e:
+        print(f"Error getting title: {e}")
         return None
 
 # Worship song database
@@ -43,8 +42,10 @@ WORSHIP_DB = {
     'way maker': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
     'what a beautiful name': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
     '10,000 reasons': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
+    'ten thousand reasons': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
     'good good father': {'key': 'C major', 'chords': ['C', 'G', 'Am', 'F']},
     'oceans': {'key': 'D major', 'chords': ['D', 'A', 'Bm', 'G']},
+    'oceans where feet may fail': {'key': 'D major', 'chords': ['D', 'A', 'Bm', 'G']},
     'reckless love': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
     'who you say i am': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
     'build my life': {'key': 'G major', 'chords': ['G', 'C', 'Em', 'D']},
@@ -102,7 +103,7 @@ def get_roman_numerals(chords, key):
 @app.route('/', methods=['GET'])
 def index():
     return jsonify({
-        'message': 'Worship Key Finder API',
+        'message': 'Worship Key Finder API is running!',
         'endpoints': {
             'analyze': 'POST /api/analyze with { "url": "youtube_url" }'
         }
@@ -117,19 +118,16 @@ def analyze():
         if not url:
             return jsonify({'error': 'Please provide a YouTube URL'}), 400
         
-        # Extract video ID
         video_id = extract_video_id(url)
         
         if not video_id:
             return jsonify({'error': 'Invalid YouTube URL'}), 400
         
-        # Get video title
         title = get_youtube_title(video_id)
         
         if not title:
-            return jsonify({'error': 'Could not get video info'}), 400
+            return jsonify({'error': 'Could not get video info. Try again.'}), 400
         
-        # Find song key
         song_data = find_song_key(title)
         
         chords_with_roman = get_roman_numerals(song_data['chords'], song_data['key'])
@@ -145,6 +143,7 @@ def analyze():
         })
         
     except Exception as e:
+        print(f"Error: {e}")
         return jsonify({'error': str(e)}), 500
 
 # For local testing
